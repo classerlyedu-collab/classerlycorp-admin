@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64px" height="64px">
+  <!-- Parent's Head -->
+  <circle cx="20" cy="20" r="10" fill="#4A90E2"/> 
+  <!-- Parent's Body -->
+  <path fill="#4A90E2" d="M15,30c0,5,10,5,10,0C25,30,15,30,15,30z"/> 
+  <!-- Parent's Arms -->
+  <path fill="#4A90E2" d="M10,28h10v2H10V28z"/> 
+  <path fill="#4A90E2" d="M20,28h10v2H20V28z"/> 
+  <!-- Parent's Legs -->
+  <path fill="#4A90E2" d="M15,32h3v10h-3V32z"/> 
+  <path fill="#4A90E2" d="M18,32h3v10h-3V32z"/> 
+
+  <!-- Child's Head -->
+  <circle cx="45" cy="20" r="6" fill="#F39C12"/> 
+  <!-- Child's Body -->
+  <path fill="#F39C12" d="M42,30c0,4,8,4,8,0C50,30,42,30,42,30z"/> 
+  <!-- Child's Arms -->
+  <path fill="#F39C12" d="M40,28h6v2h-6V28z"/> 
+  <path fill="#F39C12" d="M45,28h6v2h-6V28z"/> 
+  <!-- Child's Legs -->
+  <path fill="#F39C12" d="M44,32h2v6h-2V32z"/> 
+  <path fill="#F39C12" d="M48,32h2v6h-2V32z"/> 
+</svg>
