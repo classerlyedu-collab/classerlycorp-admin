@@ -39,6 +39,8 @@ interface EnvironmentConfig {
   CANCEL_SUBSCRIPTION: string;
   NOTIFICATIONS: string;
   USERS_FOR_NOTIFICATION: string;
+  HR_ADMIN_SUBSCRIPTION_STATUS: string;
+  TOGGLE_SUBSCRIPTION_ACCESS: string;
 }
 
 interface Environments {
@@ -48,7 +50,7 @@ interface Environments {
 
 const _Environments: Environments = {
   development: {
-    BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_DEV_BASE_URL || "http://localhost:3000/api/v1/",
+    BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_DEV_BASE_URL || "http://localhost:8082/api/v1/",
     LOGIN: `auth/login`,
     DASHBOARD_ANALYTICS: `admin/analytics`,
     HR_ADMINS: `admin/teachers`, // Keep same endpoint for compatibility
@@ -87,7 +89,9 @@ const _Environments: Environments = {
     COUPONS: "admin/coupons",
     CANCEL_SUBSCRIPTION: "payment/cancel-subscription",
     NOTIFICATIONS: "admin/notifications",
-    USERS_FOR_NOTIFICATION: "admin/users-for-notification"
+    USERS_FOR_NOTIFICATION: "admin/users-for-notification",
+    HR_ADMIN_SUBSCRIPTION_STATUS: "admin/hr-admin/",
+    TOGGLE_SUBSCRIPTION_ACCESS: "admin/hr-admin/toggle-subscription-access"
   },
   production: {
     BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_PROD_BASE_URL || "https://your-production-backend.herokuapp.com/api/v1/",
@@ -129,7 +133,9 @@ const _Environments: Environments = {
     COUPONS: "admin/coupons",
     CANCEL_SUBSCRIPTION: "payment/cancel-subscription",
     NOTIFICATIONS: "admin/notifications",
-    USERS_FOR_NOTIFICATION: "admin/users-for-notification"
+    USERS_FOR_NOTIFICATION: "admin/users-for-notification",
+    HR_ADMIN_SUBSCRIPTION_STATUS: "admin/hr-admin/",
+    TOGGLE_SUBSCRIPTION_ACCESS: "admin/hr-admin/toggle-subscription-access"
   },
 };
 

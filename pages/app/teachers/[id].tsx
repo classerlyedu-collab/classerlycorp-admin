@@ -11,7 +11,7 @@ import {
   CardHeader,
   IconButton,
 } from "@mui/material";
-import { CheckBox, Block, LockOpen, Lock } from "@mui/icons-material";
+import { CheckBox, Block, LockOpen, Lock, Star, StarBorder } from "@mui/icons-material";
 import apiRequest from "../../../src/utils/axios";
 import PageContainer from "../../../src/components/container/PageContainer";
 import Breadcrumb from "../../../src/layouts/full/shared/breadcrumb/Breadcrumb";
@@ -23,6 +23,7 @@ const FbDefaultForm = ({ query }: { query: string }) => {
   const [isLoader, setIsLoader] = useState(false);
   const [state, setState] = useState<any>({});
   const [mounted, setMounted] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<any>(null);
   const router = useRouter();
 
   const BCrumb = [
@@ -75,6 +76,36 @@ const FbDefaultForm = ({ query }: { query: string }) => {
     }
   };
 
+  const fetchSubscriptionStatus = async () => {
+    if (!state?._id) return;
+    try {
+      const response = await apiRequest.get(endPoints.HR_ADMIN_SUBSCRIPTION_STATUS + state._id, config);
+      if (response?.data?.success) {
+        setSubscriptionStatus(response.data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch subscription status:', error);
+    }
+  };
+
+  const toggleSubscriptionAccess = async () => {
+    if (!state?._id) return;
+    setIsLoader(true);
+    try {
+      const response = await apiRequest.post(endPoints.TOGGLE_SUBSCRIPTION_ACCESS, { hrAdminId: state._id }, config);
+      if (response?.data?.success) {
+        await fetchSubscriptionStatus(); // Refresh status
+        toast.success(response.data.message);
+      } else {
+        toast.error(response?.data?.message || "Action failed");
+      }
+    } catch (e) {
+      toast.error("Action failed");
+    } finally {
+      setIsLoader(false);
+    }
+  };
+
   useEffect(() => {
     if (!mounted) return;
     if (!token) return;
@@ -82,6 +113,12 @@ const FbDefaultForm = ({ query }: { query: string }) => {
       fetchStudentDetails();
     }
   }, [mounted, token, query]);
+
+  useEffect(() => {
+    if (state?._id) {
+      fetchSubscriptionStatus();
+    }
+  }, [state?._id]);
 
   if (isLoader) {
     return (
@@ -106,9 +143,19 @@ const FbDefaultForm = ({ query }: { query: string }) => {
               title={state.auth?.fullName}
               subheader={state.auth?.userName}
               action={
-                <IconButton sx={{ fontSize: '2rem' }} onClick={toggleBlockUser} color={state.auth?.isBlocked ? 'error' : 'secondary'}>
-                  {state.auth?.isBlocked ? <Lock /> : <LockOpen />}
-                </IconButton>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <IconButton
+                    sx={{ fontSize: '2rem' }}
+                    onClick={toggleSubscriptionAccess}
+                    color={subscriptionStatus?.hasAccess ? 'success' : 'default'}
+                    title={subscriptionStatus?.hasAccess ? "Revoke subscription access" : "Grant subscription access"}
+                  >
+                    {subscriptionStatus?.hasAccess ? <Star /> : <StarBorder />}
+                  </IconButton>
+                  <IconButton sx={{ fontSize: '2rem' }} onClick={toggleBlockUser} color={state.auth?.isBlocked ? 'error' : 'secondary'}>
+                    {state.auth?.isBlocked ? <Lock /> : <LockOpen />}
+                  </IconButton>
+                </div>
               }
               sx={{
                 '& .MuiCardHeader-title': { fontSize: '1.5rem', marginBottom: '0.4rem' }, // Customize title font size
@@ -117,6 +164,16 @@ const FbDefaultForm = ({ query }: { query: string }) => {
             />
             <CardContent>
               <Typography variant="body1" sx={{ fontSize: '1rem', mb: 1 }}><strong>Email:</strong> {state.auth?.email}</Typography>
+              <Typography variant="body1" sx={{ fontSize: '1rem', mb: 1 }}>
+                <strong>Subscription Access:</strong>
+                <span style={{
+                  color: subscriptionStatus?.hasAccess ? '#4caf50' : '#f44336',
+                  fontWeight: 'bold',
+                  marginLeft: '8px'
+                }}>
+                  {subscriptionStatus?.hasAccess ? 'Granted' : 'Not Granted'}
+                </span>
+              </Typography>
               <Divider sx={{ my: 2 }} />
               <Typography variant="h6" sx={{
                 mb: 2, fontSize: '1.1rem'
